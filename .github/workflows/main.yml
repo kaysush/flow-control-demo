@@ -66,6 +66,7 @@ jobs:
         with:
           service: 'pusub-push-endpoint'
           image: "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ env.LAST_COMMIT_SHA }}"
+          flags: '--memory=1Gi'
 
       - name: 'Use output'
         run: 'curl "${{ steps.deploy.outputs.url }}"'
