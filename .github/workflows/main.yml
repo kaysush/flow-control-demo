@@ -54,7 +54,7 @@ jobs:
         uses: 'google-github-actions/deploy-cloudrun@v1'
         with:
           service: 'pusub-push-endpoint'
-          image: "$GAR_LOCATION-docker.pkg.dev/$PROJECT_ID/$REPOSITORY/$IMAGE:$GITHUB_SHA"
+          image: "${{ env.GAR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.REPOSITORY }}/${{ env.IMAGE }}:${{ env.GITHUB_SHA }}"
 
       - name: 'Use output'
         run: 'curl "${{ steps.deploy.outputs.url }}"'
