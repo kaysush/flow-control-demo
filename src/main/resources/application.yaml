@@ -1,5 +1,10 @@
 gcp:
   subscription: pull-subscription
+  subscriber:
+    pull:
+      enabled: ${PULL_SUBSCRIBER_ENABLED:false}
+    push:
+      enabled: ${PUSH_SUBSCRIBER_ENABLED:true}
 
 spring:
   cloud:

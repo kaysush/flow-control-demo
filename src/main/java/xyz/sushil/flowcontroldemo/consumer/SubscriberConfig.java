@@ -1,16 +1,17 @@
 package xyz.sushil.flowcontroldemo.consumer;
 
 import com.google.api.gax.batching.FlowControlSettings;
-import org.springframework.context.annotation.Configuration;
 import com.google.cloud.spring.pubsub.core.PubSubConfiguration;
 import com.google.cloud.spring.pubsub.core.subscriber.PubSubSubscriberTemplate;
 import com.google.cloud.spring.pubsub.support.DefaultSubscriberFactory;
-import com.google.pubsub.v1.ProjectSubscriptionName;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
+import org.springframework.context.annotation.Configuration;
+import org.threeten.bp.Duration;
 
 @Configuration
+@ConditionalOnProperty(prefix = "gcp.subscriber.pull", name = "enabled", havingValue = "true")
 public class SubscriberConfig {
 
   @Value("${spring.cloud.gcp.project-id}")
@@ -30,10 +31,15 @@ public class SubscriberConfig {
 
 
   @Bean
-  public PubSubSubscriberTemplate pubSubSubscriberTemplate(PubSubConfiguration configuration){
+  public PubSubSubscriberTemplate pubSubSubscriberTemplate(PubSubConfiguration configuration) {
     DefaultSubscriberFactory factory = new DefaultSubscriberFactory(() -> projectId, configuration);
-    factory.setFlowControlSettings(FlowControlSettings.newBuilder().setMaxOutstandingElementCount(maxOutstandingElement).build());
-   return new PubSubSubscriberTemplate(factory);
+    factory.setFlowControlSettings(
+        FlowControlSettings.
+            newBuilder()
+            .setMaxOutstandingElementCount(maxOutstandingElement)
+            .build());
+    factory.setMaxAckExtensionPeriod(Duration.ofMinutes(10L));
+    return new PubSubSubscriberTemplate(factory);
   }
 
 }

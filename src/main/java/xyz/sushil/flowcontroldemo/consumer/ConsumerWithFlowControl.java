@@ -8,10 +8,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.stereotype.Component;
 
 @Component
 @Slf4j
+@ConditionalOnProperty(prefix = "gcp.subscriber.pull", name = "enabled", havingValue = "true")
 public class ConsumerWithFlowControl implements CommandLineRunner {
 
   private final PubSubSubscriberTemplate pubSubTemplate;
@@ -34,7 +36,7 @@ public class ConsumerWithFlowControl implements CommandLineRunner {
             Sleep to simulate a delay in message processing. This will cause outstanding messages to pile up and
             consumer will stop pulling in more messages.
          */
-        Thread.sleep(20000);
+        Thread.sleep(11000);
       } catch (InterruptedException e) {
         throw new RuntimeException(e);
       }
