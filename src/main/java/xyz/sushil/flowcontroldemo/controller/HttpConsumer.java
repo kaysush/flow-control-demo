@@ -19,6 +19,10 @@ public class HttpConsumer {
   public ResponseEntity<Void> processPush(@RequestBody PushEvent event) {
     String message  = new String(Base64.getDecoder().decode(event.getMessage().getData()));
     log.info("Got a message : " + message);
-    return ResponseEntity.internalServerError().build();
+    int number = Integer.parseInt(message);
+    if(number % 3 == 0)
+      return ResponseEntity.internalServerError().build();
+    else
+      return ResponseEntity.ok().build();
   }
 }
